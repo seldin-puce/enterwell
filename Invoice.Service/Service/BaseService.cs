@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Threading.Tasks;
+using Invoice.Service.AutoMapperConfiguration;
 
 namespace Invoice.Service.Service
 {
@@ -12,9 +13,9 @@ namespace Invoice.Service.Service
         : IBaseService<TRequest, TResponse, TKey> where TEntity : class
     {
         private readonly Context _context;
-        private readonly IMapper _mapper;
+        private readonly IInvoiceAutoMapper _mapper;
 
-        protected BaseService(Context context, IMapper mapper)
+        protected BaseService(Context context, IInvoiceAutoMapper mapper)
         {
             this._context = context;
             this._mapper = mapper;
@@ -22,29 +23,29 @@ namespace Invoice.Service.Service
 
         public virtual async Task<List<TResponse>> GetAll()
         {
-            return _mapper.Map<List<TResponse>>(await _context.Set<TEntity>().ToListAsync());
+            return _mapper.Mapper.Map<List<TResponse>>(await _context.Set<TEntity>().ToListAsync());
         }
 
         public virtual async Task<TResponse> GetById(TKey id)
         {
-            return _mapper.Map<TResponse>(await _context.Set<TEntity>().FindAsync(id));
+            return _mapper.Mapper.Map<TResponse>(await _context.Set<TEntity>().FindAsync(id));
         }
 
         public virtual async Task<TResponse> Create(TRequest entity)
         {
-            TEntity newEntity = _mapper.Map<TEntity>(entity);
-            _mapper.Map<TResponse>(_context.Set<TEntity>().Add(newEntity));
+            TEntity newEntity = _mapper.Mapper.Map<TEntity>(entity);
+            _mapper.Mapper.Map<TResponse>(_context.Set<TEntity>().Add(newEntity));
             await _context.SaveChangesAsync();
-            return _mapper.Map<TResponse>(newEntity);
+            return _mapper.Mapper.Map<TResponse>(newEntity);
         }
 
         public virtual async Task<TResponse> Update(TKey id, TRequest entity)
         {
             TEntity dbEntity = await _context.Set<TEntity>().FindAsync(id);
             _context.Set<TEntity>().Attach(dbEntity ?? throw new InvalidOperationException("Entity does not exist!"));
-            _mapper.Map(entity, dbEntity);
+            _mapper.Mapper.Map(entity, dbEntity);
             await _context.SaveChangesAsync();
-            return _mapper.Map<TResponse>(dbEntity);
+            return _mapper.Mapper.Map<TResponse>(dbEntity);
         }
 
         public virtual async Task Delete(TKey id)

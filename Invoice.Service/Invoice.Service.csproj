@@ -54,6 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoMapperConfiguration\AutoMapperProfile.cs" />
+    <Compile Include="AutoMapperConfiguration\InvoiceAutoMapper.cs" />
     <Compile Include="IService\IBaseService.cs" />
     <Compile Include="IService\IInvoiceService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
