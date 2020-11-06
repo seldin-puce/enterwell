@@ -2,9 +2,8 @@
 
 namespace Invoice.Data.Model
 {
-    public class InvoiceItem
+    public class InvoiceItem : BaseModel<int>
     {
-        public int Id { get; set; }
         [ForeignKey(nameof(Invoice))]
         public int InvoiceId { get; set; }
         public Invoice Invoice { get; set; }

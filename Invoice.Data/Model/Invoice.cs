@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace Invoice.Data.Model
 {
-    public class Invoice
+    public class Invoice : BaseModel<int>
     {
-        public int Id { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DueDate { get; set; }
         public double RawPrice { get; set; }

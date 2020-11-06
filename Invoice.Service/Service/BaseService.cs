@@ -1,10 +1,10 @@
-﻿using System;
+﻿using AutoMapper;
+using Invoice.Data.Context;
+using Invoice.Service.IService;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Threading.Tasks;
-using AutoMapper;
-using Invoice.Data.Context;
-using Invoice.Service.IService;
 
 namespace Invoice.Service.Service
 {
