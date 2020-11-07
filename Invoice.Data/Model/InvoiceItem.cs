@@ -4,11 +4,12 @@ namespace Invoice.Data.Model
 {
     public class InvoiceItem : BaseModel<int>
     {
+        public string Description { get; set; }
         [ForeignKey(nameof(Invoice))]
         public int InvoiceId { get; set; }
         public Invoice Invoice { get; set; }
-        [ForeignKey(nameof(Item))]
-        public int ItemId { get; set; }
-        public Item Item { get; set; }
+        public int Quantity { get; set; }
+        public double UnitPrice { get; set; }
+        public double TotalUnitRawPrice { get; set; }
     }
 }

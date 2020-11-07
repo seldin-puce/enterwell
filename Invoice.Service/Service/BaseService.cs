@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Invoice.Data.Context;
+﻿using Invoice.Data.Context;
 using Invoice.Service.IService;
 using System;
 using System.Collections.Generic;

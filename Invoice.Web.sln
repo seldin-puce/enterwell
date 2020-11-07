@@ -9,7 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Invoice.Data", "Invoice.Dat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Invoice.Service", "Invoice.Service\Invoice.Service.csproj", "{E5413ACD-FEDD-458E-839A-FE8617F00385}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Invoice.Model", "Invoice.Model\Invoice.Model.csproj", "{8FE8BEFD-B68A-4A0A-BCB2-66B2CC5482E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Invoice.Model", "Invoice.Model\Invoice.Model.csproj", "{8FE8BEFD-B68A-4A0A-BCB2-66B2CC5482E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Invoice.Plugins.Tax", "Invoice.Plugins.Tax\Invoice.Plugins.Tax.csproj", "{61FF12E8-4ECF-40AC-B962-D1FA6B237BCE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{8FE8BEFD-B68A-4A0A-BCB2-66B2CC5482E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8FE8BEFD-B68A-4A0A-BCB2-66B2CC5482E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8FE8BEFD-B68A-4A0A-BCB2-66B2CC5482E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61FF12E8-4ECF-40AC-B962-D1FA6B237BCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61FF12E8-4ECF-40AC-B962-D1FA6B237BCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61FF12E8-4ECF-40AC-B962-D1FA6B237BCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61FF12E8-4ECF-40AC-B962-D1FA6B237BCE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

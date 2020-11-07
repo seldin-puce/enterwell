@@ -5,6 +5,7 @@ namespace Invoice.Data.Model
 {
     public class Invoice : BaseModel<int>
     {
+        public string Number { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DueDate { get; set; }
         public double RawPrice { get; set; }

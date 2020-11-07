@@ -9,7 +9,6 @@ namespace Invoice.Data.Context
         {
 
         }
-        public DbSet<Item> Items { get; set; }
         public DbSet<Model.Invoice> Invoices { get; set; }
         public DbSet<InvoiceItem> InvoiceItems { get; set; }
     }

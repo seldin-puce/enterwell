@@ -55,14 +55,12 @@
     <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\Invoice.cs" />
     <Compile Include="Model\InvoiceItem.cs" />
-    <Compile Include="Model\Item.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

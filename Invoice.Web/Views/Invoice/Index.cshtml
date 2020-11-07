@@ -1,0 +1,36 @@
+﻿@model List<Invoice.Model.Response.Invoice>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Invoice Number</th>
+            <th scope="col">Date Created</th>
+            <th scope="col">Due Date</th>
+            <th scope="col">Price Without Tax</th>
+            <th scope="col">Price With Tax</th>
+            <th scope="col">Invoice Recipient</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var invoice in Model)
+    {
+        <tr>
+            <th scope="row">@invoice.Number</th>
+            <td>@invoice.DateCreated.ToShortDateString()</td>
+            <td>@invoice.DueDate.ToShortDateString()</td>
+            <td>@invoice.RawPrice</td>
+            <td>@invoice.PriceAfterTax</td>
+            <td>@invoice.InvoiceRecipient</td>
+            <td>
+                <button type="button" class="btn btn-primary"><i class="fa fa-pencil"></i> Update</button>
+                <button type="button" class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

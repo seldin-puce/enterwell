@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Invoice.Service.IService;
@@ -15,8 +16,9 @@ namespace Invoice.Web.Controllers
         {
             this._invoiceService = invoiceService;
         }
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
+            var a = await  _invoiceService.GetAll();
             return View();
         }
 

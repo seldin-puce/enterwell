@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Invoice.Model.Response
+namespace Invoice.Model.Request
 {
-    public class Item
+    public class InvoiceItem
     {
         public int Id { get; set; }
+        public int InvoiceId { get; set; }
         public int Quantity { get; set; }
         public double UnitPrice { get; set; }
         public double TotalUnitRawPrice { get; set; }
