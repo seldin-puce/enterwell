@@ -4,39 +4,45 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Invoice.Service.AutoMapperConfiguration;
 using Invoice.Service.IService;
 
 namespace Invoice.Web.Controllers
 {
     public abstract class BaseController<TRequest, TResponse, TKey> : Controller where TRequest : class, new()
     {
-        private IBaseService<TRequest, TResponse, TKey> _baseService;
+        private readonly IBaseService<TRequest, TResponse, TKey> _baseService;
+
         public BaseController(IBaseService<TRequest, TResponse, TKey> baseService)
         {
-            this._baseService = baseService;
+            _baseService = baseService;
         }
 
         // GET: BaseRead
-        public async Task<ActionResult> Index()
+        public virtual async Task<ActionResult> Index()
         {
             var entities = await _baseService.GetAll();
             return View(entities);
         }
 
         [HttpGet]
-        public ActionResult Create()
+        public virtual ActionResult Create()
         {
             return View(new TRequest());
         }
 
         [HttpPost]
-        public ActionResult Create(TRequest model)
+        public virtual async Task<ActionResult> Create(TRequest model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
             try
             {
-                var response = _baseService.Create(model);
+                await _baseService.Create(model);
             }
-            catch
+            catch (Exception e)
             {
                 TempData["Error"] = "Error has happened.";
 
@@ -45,45 +51,37 @@ namespace Invoice.Web.Controllers
         }
 
         [HttpGet]
-        public ActionResult Update(TKey id)
+        public virtual async Task<ActionResult> Update(TKey id)
         {
+            TRequest uResponse = null;
             try
             {
-                var entityFromDb = _baseService.GetById(id);
-
+                uResponse = await _baseService.GetRequestTypeById(id);
             }
             catch
             {
                 TempData["Error"] = "Error has happened.";
             }
-            return RedirectToAction(nameof(Index));
+            return View(uResponse);
         }
 
         [HttpPost]
-        public ActionResult Update(TRequest model, TKey id)
+        public virtual ActionResult Update(TRequest model, TKey id)
         {
-            var response = _baseService.Update(id, model);
+            var response = _baseService.Update(model, id);
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet]
-        public ActionResult Delete()
-        {
-            return View(new TRequest());
-        }
-
-        [HttpPost]
-        public ActionResult Delete(TKey id)
+        public virtual ActionResult Delete(TKey id)
         {
             try
             {
                 var response = _baseService.Delete(id);
-
+                TempData["Success"] = "Record deleted successfully";
             }
             catch
             {
                 TempData["Error"] = "Error has happened.";
-
             }
             return RedirectToAction(nameof(Index));
         }

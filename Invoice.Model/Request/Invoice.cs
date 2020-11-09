@@ -7,11 +7,15 @@ namespace Invoice.Model.Request
     {
         public Invoice()
         {
-            DateCreated = DateTime.Now;
+            DateCreated = null;
+            DueDate = null;
             InvoiceItems = new List<InvoiceItem>();
         }
-        public DateTime DateCreated { get; set; }
-        public DateTime DueDate { get; set; }
+
+        public int Id { get; set; }
+        public string Number { get; set; }
+        public DateTime? DateCreated { get; set; }
+        public DateTime? DueDate { get; set; }
         public double RawPrice { get; set; }
         public double PriceAfterTax { get; set; }
         public string InvoiceRecipient { get; set; }

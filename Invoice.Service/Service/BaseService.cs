@@ -30,6 +30,12 @@ namespace Invoice.Service.Service
             return _mapper.Mapper.Map<TResponse>(await _context.Set<TEntity>().FindAsync(id));
         }
 
+        public virtual async Task<TRequest> GetRequestTypeById(TKey id)
+        {
+            return _mapper.Mapper.Map<TRequest>(await _context.Set<TEntity>().FindAsync(id));
+
+        }
+
         public virtual async Task<TResponse> Create(TRequest entity)
         {
             TEntity newEntity = _mapper.Mapper.Map<TEntity>(entity);
@@ -38,7 +44,7 @@ namespace Invoice.Service.Service
             return _mapper.Mapper.Map<TResponse>(newEntity);
         }
 
-        public virtual async Task<TResponse> Update(TKey id, TRequest entity)
+        public virtual async Task<TResponse> Update(TRequest entity, TKey id)
         {
             TEntity dbEntity = await _context.Set<TEntity>().FindAsync(id);
             _context.Set<TEntity>().Attach(dbEntity ?? throw new InvalidOperationException("Entity does not exist!"));

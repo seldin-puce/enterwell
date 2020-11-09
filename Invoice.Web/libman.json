@@ -5,6 +5,10 @@
     {
       "library": "jquery@3.5.1",
       "destination": "lib/jquery/"
+    },
+    {
+      "library": "bootstrap-v4-rtl@4.5.2-1",
+      "destination": "lib/bootstrap-v4-rtl/"
     }
   ]
 }

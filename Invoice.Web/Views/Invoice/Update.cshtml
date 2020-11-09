@@ -1,0 +1,82 @@
+﻿@model Invoice.Model.Request.Invoice
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger" role="alert">
+        @Html.ValidationSummary()
+    </div>
+}
+@using (Html.BeginForm("Update", "Invoice", new {id = Model.Id},FormMethod.Post))
+{
+    <div class="form-group">
+        @Html.LabelFor(x => x.Number)
+        @Html.TextBoxFor(x => x.Number, new { @class = "form-control", placeholder = "Enter invoice number" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.DateCreated)
+        @Html.TextBoxFor(x => x.DateCreated, new { @class = "form-control", placeholder = "Enter date of creation" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.DueDate)
+        @Html.TextBoxFor(x => x.DueDate, new { @class = "form-control", placeholder = "Enter due date" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.InvoiceRecipient)
+        @Html.TextBoxFor(x => x.InvoiceRecipient, new { @class = "form-control", placeholder = "Enter invoice recipient" })
+    </div>
+    <div class="form-group">
+        <button type="button" class="btn btn-success" id="add-invoice-item-btn">Add Item</button>
+    </div>
+    <div id="items">
+        @for (int i = 0; i < Model.InvoiceItems.Count; i++)
+        {
+            <div class="row row-item">
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(x => Model.InvoiceItems[i].Description)
+                    @Html.TextBoxFor(x => Model.InvoiceItems[i].Description, new { @class = "form-control" })
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(x => Model.InvoiceItems[i].Quantity)
+                    @Html.TextBoxFor(x => Model.InvoiceItems[i].Quantity, new { @class = "form-control" })
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(x => Model.InvoiceItems[i].UnitPrice)
+                    @Html.TextBoxFor(x => Model.InvoiceItems[i].UnitPrice, new { @class = "form-control" })
+                </div>
+            </div>
+        }
+    </div>
+    <input type="submit" value="Update" class="btn btn-success">
+}
+
+
+@section scripts{
+    <script>
+        var GetItem = function (number) {
+            return `
+    <div class="row">
+        <div class="form-group col-md-4">
+            <label for="InvoiceItems[${number}].Description">Item Description</label>
+            <input type="text" class="form-control" name="InvoiceItems[${number}].Description">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="InvoiceItems[${number}].Quantity">Quantity</label>
+            <input type="number" class="form-control" name="InvoiceItems[${number}].Quantity">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="InvoiceItems[${number}].UnitPrice">Unit Price</label>
+            <input type="text" class="form-control" name="InvoiceItems[${number}].UnitPrice">
+        </div>
+    </div>`;
+        }
+        $("#add-invoice-item-btn").on('click',
+            function (e) {
+                $("#items").append(GetItem($(".row-item").length));
+            });
+
+    </script>
+}

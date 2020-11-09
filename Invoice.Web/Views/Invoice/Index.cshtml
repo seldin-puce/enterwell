@@ -4,6 +4,25 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible show" role="alert">
+        <strong>@TempData["Error"]</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+else if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible show" role="alert">
+        <strong>@TempData["Success"]</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
 <table class="table">
     <thead>
         <tr>
@@ -17,20 +36,20 @@
         </tr>
     </thead>
     <tbody>
-    @foreach (var invoice in Model)
-    {
-        <tr>
-            <th scope="row">@invoice.Number</th>
-            <td>@invoice.DateCreated.ToShortDateString()</td>
-            <td>@invoice.DueDate.ToShortDateString()</td>
-            <td>@invoice.RawPrice</td>
-            <td>@invoice.PriceAfterTax</td>
-            <td>@invoice.InvoiceRecipient</td>
-            <td>
-                <button type="button" class="btn btn-primary"><i class="fa fa-pencil"></i> Update</button>
-                <button type="button" class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button>
-            </td>
-        </tr>
-    }
+        @foreach (var invoice in Model)
+        {
+            <tr>
+                <th>@invoice.Number</th>
+                <td>@invoice.DateCreated.ToShortDateString()</td>
+                <td>@invoice.DueDate.ToShortDateString()</td>
+                <td>@invoice.RawPrice</td>
+                <td>@invoice.PriceAfterTax</td>
+                <td>@invoice.InvoiceRecipient</td>
+                <td>
+                    @Html.ActionLink("Update", "Update", new { id = @invoice.Id }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink("Delete", "Delete", new { id = @invoice.Id }, new { @class = "btn btn-danger" })
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

@@ -11,55 +11,74 @@
     </div>
 }
 
-<form>
+@using (Html.BeginForm("Create","Invoice", FormMethod.Post))
+{
+     <div class="form-group">
+        @Html.LabelFor(x => x.Number)
+        @Html.TextBoxFor(x => x.Number, new { @class = "form-control", placeholder = "Enter invoice number"})
+    </div>
     <div class="form-group">
         @Html.LabelFor(x => x.DateCreated)
-        @Html.TextBoxFor(x => x.DateCreated, new { @class = "form-control", placeholder = "Enter date" })
+        @Html.TextBoxFor(x => x.DateCreated, new { @class = "form-control", placeholder = "Enter date of creation" })
     </div>
     <div class="form-group">
         @Html.LabelFor(x => x.DueDate)
-        @Html.TextBoxFor(x => x.DueDate, new { @class = "form-control", placeholder = "" })
+        @Html.TextBoxFor(x => x.DueDate, new { @class = "form-control", placeholder = "Enter due date" })
     </div>
     <div class="form-group">
-        <label for="exampleInputEmail1">Recipient</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        @Html.LabelFor(x => x.InvoiceRecipient)
+        @Html.TextBoxFor(x => x.InvoiceRecipient, new { @class = "form-control", placeholder = "Enter invoice recipient" })
     </div>
     <div class="form-group">
-        <label for="exampleInputEmail1">Item</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        <button type="button" class="btn btn-success" id="add-invoice-item-btn">Add Item</button>
     </div>
     <div id="items">
         @for (int i = 0; i < Model.InvoiceItems.Count; i++)
         {
-            <div class="item">
-                <div class="form-group">
-                    @Html.LabelFor(x => Model.InvoiceItems[i].Quantity)
-                    @Html.TextBoxFor(x => Model.InvoiceItems[i].Quantity, new { @class = "form-control" })
-                </div>
+        <div class="row row-item">
+            <div class="form-group col-md-4">
+                @Html.LabelFor(x => Model.InvoiceItems[i].Description)
+                @Html.TextBoxFor(x => Model.InvoiceItems[i].Description, new { @class = "form-control" })
             </div>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(x => Model.InvoiceItems[i].Quantity)
+                @Html.TextBoxFor(x => Model.InvoiceItems[i].Quantity, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(x => Model.InvoiceItems[i].UnitPrice)
+                @Html.TextBoxFor(x => Model.InvoiceItems[i].UnitPrice, new { @class = "form-control" })
+            </div>
+        </div>
         }
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+    <input type="submit" value="Create" class="btn btn-primary">
+}
+
 
 @section scripts{
     <script>
         var GetItem = function (number) {
             return `
-                <div class="item">
-                <div class="form-group">
-                                <label for="InvoiceItems[${number}].Quantity">Item</label>
-                                <input type="number" class="form-control" name="InvoiceItems[${number}].Quantity">
-                </div>
-            </div>`;
+    <div class="row row-item">
+        <div class="form-group col-md-4">
+            <label for="InvoiceItems[${number}].Description">Item Description</label>
+            <input type="text" class="form-control" name="InvoiceItems[${number}].Description">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="InvoiceItems[${number}].Quantity">Quantity</label>
+            <input type="number" class="form-control" name="InvoiceItems[${number}].Quantity">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="InvoiceItems[${number}].UnitPrice">Unit Price</label>
+            <input type="text" class="form-control" name="InvoiceItems[${number}].UnitPrice">
+        </div>
+    </div>`;
         }
-
         $("#add-invoice-item-btn").on('click',
             function (e) {
-                $("#items").append(GetItem($(".item").length));
+                $("#items").append(GetItem($(".row-item").length));
             });
+
 
     </script>
 }
