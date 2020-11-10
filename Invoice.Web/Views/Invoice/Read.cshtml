@@ -1,0 +1,44 @@
+﻿@model Invoice.Model.Response.Invoice
+@{
+    ViewBag.Title = "Read";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Html.ActionLink("Back", "Index", null, new { @class = "btn btn-primary", style="margin-bottom: 20px"})
+<div class="form-group">
+    @Html.LabelFor(x => x.Number)
+    @Html.TextBoxFor(x => x.Number, new { @class = "form-control", disabled = true })
+</div>
+<div class="form-group">
+    @Html.LabelFor(x => x.DateCreated)
+    @Html.TextBoxFor(x => x.DateCreated, new { @class = "form-control", disabled = true })
+</div>
+<div class="form-group">
+    @Html.LabelFor(x => x.DueDate)
+    @Html.TextBoxFor(x => x.DueDate, new { @class = "form-control", disabled = true })
+</div>
+<div class="form-group">
+    @Html.LabelFor(x => x.InvoiceRecipient)
+    @Html.TextBoxFor(x => x.InvoiceRecipient, new { @class = "form-control", disabled = true })
+</div>
+<div class="form-group">
+</div>
+<div id="items">
+    @for (int i = 0; i < Model.InvoiceItems.Count; i++)
+    {
+        <div class="row row-item">
+            <div class="form-group col-md-4">
+                @Html.LabelFor(x => Model.InvoiceItems[i].Description)
+                @Html.TextBoxFor(x => Model.InvoiceItems[i].Description, new { @class = "form-control", disabled = true })
+            </div>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(x => Model.InvoiceItems[i].Quantity)
+                @Html.TextBoxFor(x => Model.InvoiceItems[i].Quantity, new { @class = "form-control", disabled = true })
+            </div>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(x => Model.InvoiceItems[i].UnitPrice)
+                @Html.TextBoxFor(x => Model.InvoiceItems[i].UnitPrice, new { @class = "form-control", disabled = true })
+            </div>
+        </div>
+    }
+</div>
+

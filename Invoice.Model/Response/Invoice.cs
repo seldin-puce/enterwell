@@ -12,6 +12,6 @@ namespace Invoice.Model.Response
         public double RawPrice { get; set; }
         public double PriceAfterTax { get; set; }
         public string InvoiceRecipient { get; set; }
-        public ICollection<InvoiceItem> InvoiceItems { get; set; }
+        public List<InvoiceItem> InvoiceItems { get; set; }
     }
 }

@@ -9,7 +9,7 @@ using Invoice.Service.IService;
 
 namespace Invoice.Web.Controllers
 {
-    public abstract class BaseController<TRequest, TResponse, TKey> : Controller where TRequest : class, new()
+    public abstract class BaseController<TRequest, TResponse, TKey> : Controller where TResponse:  class where TRequest : class, new()
     {
         private readonly IBaseService<TRequest, TResponse, TKey> _baseService;
 
@@ -18,7 +18,6 @@ namespace Invoice.Web.Controllers
             _baseService = baseService;
         }
 
-        // GET: BaseRead
         public virtual async Task<ActionResult> Index()
         {
             var entities = await _baseService.GetAll();
@@ -48,6 +47,21 @@ namespace Invoice.Web.Controllers
 
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public virtual async Task<ActionResult> Read(TKey id)
+        {
+            TResponse response = null;
+            try
+            {
+                response = await _baseService.GetById(id);
+            }
+            catch
+            {
+                TempData["Error"] = "Error has happened.";
+            }
+            return View(response);
         }
 
         [HttpGet]

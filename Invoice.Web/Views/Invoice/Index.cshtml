@@ -46,8 +46,9 @@ else if (TempData["Success"] != null)
                 <td>@invoice.PriceAfterTax</td>
                 <td>@invoice.InvoiceRecipient</td>
                 <td>
-                    @Html.ActionLink("Update", "Update", new { id = @invoice.Id }, new { @class = "btn btn-primary" })
-                    @Html.ActionLink("Delete", "Delete", new { id = @invoice.Id }, new { @class = "btn btn-danger" })
+                    @Html.ActionLink("Details", "Read", new { id = @invoice.Id }, new { @class = "btn btn-success" })
+                    @Html.ActionLink("Update", "Update", new {id = @invoice.Id}, new {@class = "btn btn-primary"})
+                    @Html.ActionLink("Delete", "Delete", new {id = @invoice.Id}, new {@class = "btn btn-danger"})
                 </td>
             </tr>
         }
