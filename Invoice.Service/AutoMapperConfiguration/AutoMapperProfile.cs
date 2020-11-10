@@ -6,12 +6,12 @@ namespace Invoice.Service.AutoMapperConfiguration
     {
         public AutoMapperProfile()
         {
-            CreateMap<Data.Model.Invoice, Model.Response.Invoice>();
-            CreateMap<Model.Request.Invoice, Data.Model.Invoice>().ReverseMap();
-            CreateMap<Model.Response.Invoice, Model.Request.Invoice>();
+            CreateMap<Data.Model.Invoice, Data.DTO.Response.Invoice>();
+            CreateMap<Data.DTO.Request.Invoice, Data.Model.Invoice>().ReverseMap();
 
-            CreateMap<Model.Request.InvoiceItem, Data.Model.InvoiceItem>().ReverseMap();
-            CreateMap<Data.Model.InvoiceItem, Model.Response.InvoiceItem>();
+            CreateMap<Data.DTO.Request.InvoiceItem, Data.Model.InvoiceItem>();
+            CreateMap<Data.Model.InvoiceItem, Data.DTO.Request.InvoiceItem>();
+            CreateMap<Data.Model.InvoiceItem, Data.DTO.Response.InvoiceItem>();
         }
     }
 }

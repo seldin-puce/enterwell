@@ -7,8 +7,6 @@ namespace Invoice.Model.Request
     {
         public Invoice()
         {
-            DateCreated = null;
-            DueDate = null;
             InvoiceItems = new List<InvoiceItem>();
         }
 

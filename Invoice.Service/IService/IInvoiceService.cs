@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Invoice.Service.IService
 {
-    public interface IInvoiceService : IBaseService<Model.Request.Invoice, Model.Response.Invoice, int>
+    public interface IInvoiceService : IBaseService<Data.DTO.Request.Invoice, Data.DTO.Response.Invoice, int>
     { }
 }

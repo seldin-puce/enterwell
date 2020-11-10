@@ -9,7 +9,7 @@ using Invoice.Service.IService;
 
 namespace Invoice.Web.Controllers
 {
-    public class InvoiceController : BaseController<Model.Request.Invoice, Model.Response.Invoice, int>
+    public class InvoiceController : BaseController<Data.DTO.Request.Invoice, Data.DTO.Response.Invoice, int>
     {
         private IInvoiceService _invoiceService;
         public InvoiceController(IInvoiceService invoiceService, InvoiceAutoMapper invoiceAutoMapper) : base(invoiceService)
@@ -20,10 +20,10 @@ namespace Invoice.Web.Controllers
         [HttpGet]
         public override async Task<ActionResult> Update(int id)
         {
-            Model.Request.Invoice entityFromDb = null;
+            Data.DTO.Request.Invoice reqEntity = null;
             try
             {
-                entityFromDb = await _invoiceService.GetRequestTypeById(id);
+                reqEntity = await _invoiceService.GetRequestTypeById(id);
                 TempData["Success"] = "Record successfully updated";
             }
             catch
@@ -31,7 +31,7 @@ namespace Invoice.Web.Controllers
                 TempData["Error"] = "Error has happened.";
             }
 
-            return View(nameof(Update), entityFromDb);
+            return View(nameof(Update), reqEntity);
         }
     }
 }

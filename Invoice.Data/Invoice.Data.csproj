@@ -52,6 +52,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\Context.cs" />
+    <Compile Include="DTO\Request\Invoice.cs" />
+    <Compile Include="DTO\Request\InvoiceItem.cs" />
+    <Compile Include="DTO\Response\Invoice.cs" />
+    <Compile Include="DTO\Response\InvoiceItem.cs" />
     <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\Invoice.cs" />
     <Compile Include="Model\InvoiceItem.cs" />
@@ -61,6 +65,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

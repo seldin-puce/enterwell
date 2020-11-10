@@ -40,6 +40,7 @@ namespace Invoice.Web.Controllers
             try
             {
                 await _baseService.Create(model);
+                TempData["Success"] = "Record created successfully.";
             }
             catch (Exception e)
             {

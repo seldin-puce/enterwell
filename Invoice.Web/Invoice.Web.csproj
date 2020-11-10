@@ -338,10 +338,6 @@
       <Project>{0061DCF6-4668-451A-8CD0-7866E2BD047E}</Project>
       <Name>Invoice.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Invoice.Model\Invoice.Model.csproj">
-      <Project>{8fe8befd-b68a-4a0a-bcb2-66b2cc5482e1}</Project>
-      <Name>Invoice.Model</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Invoice.Service\Invoice.Service.csproj">
       <Project>{e5413acd-fedd-458e-839a-fe8617f00385}</Project>
       <Name>Invoice.Service</Name>

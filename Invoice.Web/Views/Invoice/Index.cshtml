@@ -1,4 +1,4 @@
-﻿@model List<Invoice.Model.Response.Invoice>
+﻿@model List<Invoice.Data.DTO.Response.Invoice>
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -23,6 +23,7 @@ else if (TempData["Success"] != null)
     </div>
 }
 
+@Html.ActionLink("Add New Invoice", "Create", null, new { @class = "btn btn-primary", style = "margin-bottom: 20px" })
 <table class="table">
     <thead>
         <tr>
@@ -47,8 +48,8 @@ else if (TempData["Success"] != null)
                 <td>@invoice.InvoiceRecipient</td>
                 <td>
                     @Html.ActionLink("Details", "Read", new { id = @invoice.Id }, new { @class = "btn btn-success" })
-                    @Html.ActionLink("Update", "Update", new {id = @invoice.Id}, new {@class = "btn btn-primary"})
-                    @Html.ActionLink("Delete", "Delete", new {id = @invoice.Id}, new {@class = "btn btn-danger"})
+                    @Html.ActionLink("Update", "Update", new { id = @invoice.Id }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink("Delete", "Delete", new { id = @invoice.Id }, new { @class = "btn btn-danger" })
                 </td>
             </tr>
         }
