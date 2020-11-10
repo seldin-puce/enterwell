@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Invoice.Data.Context;
 using Invoice.Service.AutoMapperConfiguration;
 using Invoice.Service.IService;
@@ -13,8 +11,8 @@ namespace Invoice.Service.Service
     public class InvoiceService : BaseService<Data.Model.Invoice, Data.DTO.Request.Invoice, Data.DTO.Response.Invoice, int>,
         IInvoiceService
     {
-        private Context _context;
-        private IInvoiceAutoMapper _mapper;
+        private readonly Context _context;
+        private readonly IInvoiceAutoMapper _mapper;
 
         public InvoiceService(Context context, IInvoiceAutoMapper mapper) : base(context, mapper)
         {
@@ -32,10 +30,10 @@ namespace Invoice.Service.Service
                     _context.Invoices.Add(invoiceModel);
                     await _context.SaveChangesAsync();
                     transaction.Commit();
-                    
+
                     return _mapper.Mapper.Map<Data.DTO.Response.Invoice>(invoiceModel);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     transaction.Rollback();
                     throw;
@@ -45,25 +43,46 @@ namespace Invoice.Service.Service
 
         public override async Task<Data.DTO.Response.Invoice> Update(Data.DTO.Request.Invoice entity, int id)
         {
-            var dbEntity = await _context.Invoices.Include("InvoiceItems").Where(x => x.Id == id).SingleOrDefaultAsync();
-            _context.Invoices.Attach(dbEntity);
-            var a = _mapper.Mapper.Map<Data.Model.Invoice>(dbEntity);
-            foreach (var item in dbEntity.InvoiceItems)
+            using (var dbEntity = await _context.Invoices.Include("InvoiceItems").Where(x => x.Id == id)
+                .SingleOrDefaultAsync())
             {
-                item.Description = "PELPSARA";
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var entityEntry = _context.Entry(dbEntity);
+                        entityEntry.CurrentValues.SetValues(entity);
+                        foreach (var item in entity.InvoiceItems)
+                        {
+                            var originalItem = dbEntity.InvoiceItems.SingleOrDefault(x => x.Id == item.Id && id != 0);
+                            if (originalItem != null)
+                            {
+                                var childEntry = _context.Entry(originalItem);
+                                childEntry.CurrentValues.SetValues(item);
+                            }
+                            else
+                            {
+                                dbEntity.InvoiceItems.Add(_mapper.Mapper.Map<Data.Model.InvoiceItem>(item));
+                            }
+                        }
+                        foreach (var item in dbEntity.InvoiceItems.Where(c => c.Id != 0).ToList())
+                        {
+                            if (entity.InvoiceItems.All(x => x.Id != item.Id))
+                            {
+                                _context.InvoiceItems.Remove(item);
+                            }
+                        }
+                        await _context.SaveChangesAsync();
+                        transaction.Commit();
+                        return _mapper.Mapper.Map<Data.DTO.Response.Invoice>(dbEntity);
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
             }
-            var a = dbEntity;
-            try
-            {
-                await _context.SaveChangesAsync();
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-            return _mapper.Mapper.Map<Data.DTO.Response.Invoice>(dbEntity);
         }
 
         public override async Task<Data.DTO.Response.Invoice> GetById(int id)
