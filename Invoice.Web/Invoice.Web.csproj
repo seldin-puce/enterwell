@@ -57,6 +57,7 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -141,6 +142,9 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\MefConfig.cs" />
+    <Compile Include="App_Start\MefControllerFactory.cs" />
+    <Compile Include="App_Start\MefDependencyResolver.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="Controllers\BaseController.cs" />
@@ -150,6 +154,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\InvoiceTax.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -337,6 +342,10 @@
     <ProjectReference Include="..\Invoice.Data\Invoice.Data.csproj">
       <Project>{0061DCF6-4668-451A-8CD0-7866E2BD047E}</Project>
       <Name>Invoice.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Invoice.Plugins.Tax\Invoice.Plugins.Tax.csproj">
+      <Project>{61FF12E8-4ECF-40AC-B962-D1FA6B237BCE}</Project>
+      <Name>Invoice.Plugins.Tax</Name>
     </ProjectReference>
     <ProjectReference Include="..\Invoice.Service\Invoice.Service.csproj">
       <Project>{e5413acd-fedd-458e-839a-fe8617f00385}</Project>

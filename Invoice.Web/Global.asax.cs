@@ -3,6 +3,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using AutoMapper;
 using Invoice.Service.AutoMapperConfiguration;
+using Invoice.Web.App_Start;
 
 namespace Invoice.Web
 {
@@ -15,6 +16,7 @@ namespace Invoice.Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            MefConfig.RegisterMef();
         }
     }
 }

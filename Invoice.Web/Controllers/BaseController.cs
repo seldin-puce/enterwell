@@ -9,7 +9,7 @@ using Invoice.Service.IService;
 
 namespace Invoice.Web.Controllers
 {
-    public abstract class BaseController<TRequest, TResponse, TKey> : Controller where TResponse:  class where TRequest : class, new()
+    public abstract class BaseController<TRequest, TResponse, TKey> : Controller where TResponse:  class where TRequest : class, new() where TKey : struct
     {
         private readonly IBaseService<TRequest, TResponse, TKey> _baseService;
 
@@ -66,18 +66,18 @@ namespace Invoice.Web.Controllers
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Update(TKey id)
+        public virtual async Task<ActionResult> Update(TKey? id)
         {
-            TRequest uResponse = null;
             try
             {
-                uResponse = await _baseService.GetRequestTypeById(id);
+                TRequest uResponse = await _baseService.GetRequestTypeById(id.Value);
+                return View(uResponse);
             }
             catch
             {
                 TempData["Error"] = "Error has happened.";
+                return View(nameof(Index));
             }
-            return View(uResponse);
         }
 
         [HttpPost]
