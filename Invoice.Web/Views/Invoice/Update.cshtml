@@ -1,4 +1,4 @@
-﻿@model Invoice.Web.ViewModel.InvoiceTax
+﻿@model Invoice.Web.ViewModel.UpdateViewModel
 @{
     ViewBag.Title = "Update";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -10,46 +10,47 @@
         @Html.ValidationSummary()
     </div>
 }
-@using (Html.BeginForm("Update", "Invoice", new { id = Model.Invoice.Id }, FormMethod.Post))
+@using (Html.BeginForm("Update", "Invoice", new { id = Model.Id }, FormMethod.Post))
 {
     <div class="form-group">
-        @Html.LabelFor(x => x.Invoice.Number)
-        @Html.TextBoxFor(x => x.Invoice.Number, new { @class = "form-control", placeholder = "Enter invoice number" })
+        @Html.LabelFor(x => x.Number)
+        @Html.TextBoxFor(x => x.Number, new { @class = "form-control", placeholder = "Enter invoice number" })
     </div>
     <div class="form-group">
-        @Html.LabelFor(x => x.Invoice.DateCreated)
-        @Html.TextBoxFor(x => x.Invoice.DateCreated, new { @class = "form-control", placeholder = "Enter date of creation", type="date" })
+        @Html.LabelFor(x => x.DateCreated)
+        @Html.TextBoxFor(x => x.DateCreated, new { @class = "form-control", placeholder = "Enter date of creation" })
     </div>
     <div class="form-group">
-        @Html.LabelFor(x => x.Invoice.DueDate)
-        @Html.TextBoxFor(x => x.Invoice.DueDate, new { @class = "form-control", placeholder = "Enter due date", type = "date" })
+        @Html.LabelFor(x => x.DueDate)
+        @Html.TextBoxFor(x => x.DueDate, new { @class = "form-control", placeholder = "Enter due date" })
     </div>
     <div class="form-group">
-        @Html.LabelFor(x => x.Invoice.InvoiceRecipient)
-        @Html.TextBoxFor(x => x.Invoice.InvoiceRecipient, new { @class = "form-control", placeholder = "Enter invoice recipient" })
+        @Html.LabelFor(x => x.InvoiceRecipient)
+        @Html.TextBoxFor(x => x.InvoiceRecipient, new { @class = "form-control", placeholder = "Enter invoice recipient" })
     </div>
     <div class="form-group">
-        @Html.LabelFor(x => x.SelectedTaxValue)
-        @Html.DropDownListFor(x => x.SelectedTaxValue, Model.Taxes, new {@class = "form-control"})
+        @Html.LabelFor(x => x.SelectedTax)
+        @Html.DropDownListFor(x => x.SelectedTax, Model.Taxes, new {@class = "form-control"})
     </div>
     <div class="form-group">
         <button type="button" class="btn btn-success" id="add-invoice-item-btn">Add Item</button>
     </div>
     <div id="items">
-        @for (int i = 0; i < Model.Invoice.InvoiceItems.Count; i++)
+        @for (int i = 0; i < Model.InvoiceItems.Count; i++)
         {
             <div class="row row-item">
+                @Html.HiddenFor(x => Model.InvoiceItems[i].Id)
                 <div class="form-group col-md-3">
-                    @Html.LabelFor(x => Model.Invoice.InvoiceItems[i].Description)
-                    @Html.TextBoxFor(x => Model.Invoice.InvoiceItems[i].Description, new {@class = "form-control"})
+                    @Html.LabelFor(x => Model.InvoiceItems[i].Description)
+                    @Html.TextBoxFor(x => Model.InvoiceItems[i].Description, new {@class = "form-control"})
                 </div>
                 <div class="form-group col-md-3">
-                    @Html.LabelFor(x => Model.Invoice.InvoiceItems[i].Quantity)
-                    @Html.TextBoxFor(x => Model.Invoice.InvoiceItems[i].Quantity, new {@class = "form-control"})
+                    @Html.LabelFor(x => Model.InvoiceItems[i].Quantity)
+                    @Html.TextBoxFor(x => Model.InvoiceItems[i].Quantity, new {@class = "form-control"})
                 </div>
                 <div class="form-group col-md-3">
-                    @Html.LabelFor(x => Model.Invoice.InvoiceItems[i].UnitPrice)
-                    @Html.TextBoxFor(x => Model.Invoice.InvoiceItems[i].UnitPrice, new {@class = "form-control"})
+                    @Html.LabelFor(x => Model.InvoiceItems[i].UnitPrice)
+                    @Html.TextBoxFor(x => Model.InvoiceItems[i].UnitPrice, new {@class = "form-control"})
                 </div>
                 <div class="form-group col-md-3">
                     <button type="button" class="btn btn-danger remove-item">Remove Item</button>
@@ -63,36 +64,36 @@
 
 @section scripts{
     <script>
-        var GetItem = function(number) {
+        var GetItem = function (number) {
             return `
-            <div class="row row-item">
-                <div class="form-group col-md-3">
-                    <label for="InvoiceItems[${number}].Description">Item Description</label>
-                    <input type="text" class="form-control" name="InvoiceItems[${number}].Description">
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="InvoiceItems[${number}].Quantity">Quantity</label>
-                    <input type="number" class="form-control" name="InvoiceItems[${number}].Quantity">
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="InvoiceItems[${number}].UnitPrice">Unit Price</label>
-                    <input type="text" class="form-control" name="InvoiceItems[${number}].UnitPrice">
-                </div>
-                 <div class="form-group col-md-3">
-                    <button type="button" class="btn btn-danger remove-item">Remove Item</button>
-                 </div>
-            </div>`;
+                <div class="row row-item">
+                    <div class="form-group col-md-3">
+                        <label for="InvoiceItems[${number}].Description">Item Description</label>
+                        <input type="text" class="form-control" name="InvoiceItems[${number}].Description">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="InvoiceItems[${number}].Quantity">Quantity</label>
+                        <input type="number" class="form-control" name="InvoiceItems[${number}].Quantity">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="InvoiceItems[${number}].UnitPrice">Unit Price</label>
+                        <input type="text" class="form-control" name="InvoiceItems[${number}].UnitPrice">
+                    </div>
+                     <div class="form-group col-md-3">
+                        <button type="button" class="btn btn-danger remove-item">Remove Item</button>
+                     </div>
+                </div>`;
         }
         $("#add-invoice-item-btn").on('click',
-            function(e) {
+            function (e) {
 
                 $("#items").append(GetItem($(".row-item").length));
             });
         $(document).on("click",
             ".remove-item",
-            function() {
+            function () {
                 $(this).closest(".row-item").remove();
-                $(".row-item").each(function(index) {
+                $(".row-item").each(function (index) {
                     var input = $(this).find("input");
                     var newName = input.attr("name").replace(/\[\d\]/, `[${index}]`);
                     input.attr("name", newName);

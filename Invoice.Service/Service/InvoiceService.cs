@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Invoice.Data.Context;
+using Invoice.Data.DTO.Request;
 using Invoice.Service.AutoMapperConfiguration;
 using Invoice.Service.IService;
 
@@ -43,44 +44,65 @@ namespace Invoice.Service.Service
 
         public override async Task<Data.DTO.Response.Invoice> Update(Data.DTO.Request.Invoice entity, int id)
         {
-            using (var dbEntity = await _context.Invoices.Include("InvoiceItems").Where(x => x.Id == id)
-                .SingleOrDefaultAsync())
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                using (var transaction = _context.Database.BeginTransaction())
+                try
                 {
-                    try
+                    var dbEntity = await _context.Invoices.FirstOrDefaultAsync(x => x.Id == id);
+                    dbEntity.DateCreated = entity.DateCreated;
+                    dbEntity.DueDate = entity.DueDate;
+                    dbEntity.Number = entity.Number;
+                    dbEntity.InvoiceRecipient = entity.InvoiceRecipient;
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+
+
+                    var invoiceItems = await _context.InvoiceItems.Where(x => x.InvoiceId == dbEntity.Id).AsNoTracking().ToListAsync();
+                    var invoiceItemsToAdd = entity.InvoiceItems.Where(x => !x.Id.HasValue).Select(x => new Data.Model.InvoiceItem()
                     {
-                        var entityEntry = _context.Entry(dbEntity);
-                        entityEntry.CurrentValues.SetValues(entity);
-                        foreach (var item in entity.InvoiceItems)
-                        {
-                            var originalItem = dbEntity.InvoiceItems.SingleOrDefault(x => x.Id == item.Id && id != 0);
-                            if (originalItem != null)
-                            {
-                                var childEntry = _context.Entry(originalItem);
-                                childEntry.CurrentValues.SetValues(item);
-                            }
-                            else
-                            {
-                                dbEntity.InvoiceItems.Add(_mapper.Mapper.Map<Data.Model.InvoiceItem>(item));
-                            }
-                        }
-                        foreach (var item in dbEntity.InvoiceItems.Where(c => c.Id != 0).ToList())
-                        {
-                            if (entity.InvoiceItems.All(x => x.Id != item.Id))
-                            {
-                                _context.InvoiceItems.Remove(item);
-                            }
-                        }
-                        await _context.SaveChangesAsync();
-                        transaction.Commit();
-                        return _mapper.Mapper.Map<Data.DTO.Response.Invoice>(dbEntity);
-                    }
-                    catch (Exception)
+                        Description = x.Description,
+                        InvoiceId = dbEntity.Id,
+                        Quantity = x.Quantity,
+                        TotalUnitRawPrice = x.TotalUnitRawPrice,
+                        UnitPrice = x.UnitPrice
+                    }).ToList();
+                    if (invoiceItemsToAdd.Any())
                     {
-                        transaction.Rollback();
-                        throw;
+                        _context.InvoiceItems.AddRange(invoiceItemsToAdd);
                     }
+
+                    var invoiceItemsToEdit = entity.InvoiceItems.Where(x => invoiceItems.Any(y => y.Id == x.Id) && x.Id.HasValue).ToList();
+                    if (invoiceItemsToEdit.Any())
+                    {
+                        invoiceItemsToEdit.ForEach(invoiceItem =>
+                        {
+                            var item = new Data.Model.InvoiceItem { Id = invoiceItem.Id.Value };
+                            _context.InvoiceItems.Attach(item);
+                            item.Description = invoiceItem.Description;
+                            item.UnitPrice = invoiceItem.UnitPrice;
+                            item.TotalUnitRawPrice = invoiceItem.TotalUnitRawPrice;
+                            item.Quantity = invoiceItem.Quantity;
+                        });
+                    }
+
+                    var invoiceItemsToDelete = invoiceItems.Where(x => entity.InvoiceItems.All(y => y.Id != x.Id)).ToList();
+                    if (invoiceItemsToDelete.Any())
+                    {
+                        invoiceItemsToDelete.ForEach(invoiceItem =>
+                        {
+                            _context.InvoiceItems.Attach(invoiceItem);
+                            _context.InvoiceItems.Remove(invoiceItem);
+                        });
+                    }
+
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+
+                    return _mapper.Mapper.Map<Data.DTO.Response.Invoice>(dbEntity);
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw;
                 }
             }
         }

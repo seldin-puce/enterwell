@@ -16,7 +16,7 @@ namespace Invoice.Web.Controllers
         private IInvoiceService _invoiceService;
         [ImportMany]
         public IEnumerable<Lazy<ITax, ITaxMetaData>> Taxes { get; private set; }
-        public InvoiceController(IInvoiceService invoiceService, InvoiceAutoMapper invoiceAutoMapper) : base(invoiceService)
+        public InvoiceController(IInvoiceService invoiceService) : base(invoiceService)
         {
             _invoiceService = invoiceService;
         }
@@ -26,17 +26,26 @@ namespace Invoice.Web.Controllers
         {
             try
             {
-                var model = new InvoiceTax()
+                var invoice = await _invoiceService.GetRequestTypeById(id.Value);
+                var model = new UpdateViewModel
                 {
-                    Invoice = await _invoiceService.GetRequestTypeById(id.Value),
-                    Taxes = Taxes.Select(x => new SelectListItem()
+                    Id = invoice.Id,
+                    DateCreated = invoice.DateCreated,
+                    DueDate = invoice.DueDate,
+                    InvoiceRecipient = invoice.InvoiceRecipient,
+                    Number = invoice.Number,
+                    PriceAfterTax = invoice.PriceAfterTax,
+                    RawPrice = invoice.RawPrice,
+                    InvoiceItems = invoice.InvoiceItems,
+                    Taxes = Taxes.Select(x => new SelectListItem
                     {
                         Value = x.Metadata.TaxValue,
                         Text = x.Metadata.TaxValue
                     }).ToList()
                 };
+
                 TempData["Success"] = "Record successfully updated";
-                return View(nameof(Update), model);
+                return View(model);
             }
             catch (Exception e)
             {
