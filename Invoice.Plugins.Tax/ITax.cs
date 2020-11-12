@@ -2,6 +2,6 @@
 {
     public interface ITax
     {
-        decimal Calculate(decimal value);
+        double Calculate(double value);
     }
 }

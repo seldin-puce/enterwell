@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
+using Invoice.Data.DTO.Request;
 
-namespace Invoice.Data.DTO.Request
+namespace Invoice.Web.ViewModel
 {
-    public class Invoice
+    public class CreateViewModel
     {
-        public Invoice()
+        public CreateViewModel()
         {
             InvoiceItems = new List<InvoiceItem>();
         }
@@ -23,6 +25,7 @@ namespace Invoice.Data.DTO.Request
         public string InvoiceRecipient { get; set; }
         public string ApplicationUserId { get; set; }
         public List<InvoiceItem> InvoiceItems { get; set; }
+        public List<SelectListItem> Taxes { get; set; }
         public string SelectedTax { get; set; }
     }
 }

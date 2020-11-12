@@ -6,9 +6,9 @@ namespace Invoice.Plugins.Tax
     [ExportMetadata("TaxValue", "25 %")]
     public class CroTaxProvider : ITax
     {
-        public decimal Calculate(decimal value)
+        public double Calculate(double value)
         {
-            return value * 0.25M;
+            return value * 0.25;
         }
     }
 }

@@ -1,9 +1,9 @@
-﻿@model Invoice.Data.DTO.Request.Invoice
+﻿@model Invoice.Web.ViewModel.CreateViewModel
 @{
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@Html.ActionLink("Back", "Index", null, new { @class = "btn btn-primary", style="margin-bottom: 20px"})
 @if (!ViewData.ModelState.IsValid)
 {
     <div class="alert alert-danger" role="alert">
@@ -11,11 +11,11 @@
     </div>
 }
 
-@using (Html.BeginForm("Create","Invoice", FormMethod.Post))
+@using (Html.BeginForm("Create", "Invoice", FormMethod.Post))
 {
-     <div class="form-group">
+    <div class="form-group">
         @Html.LabelFor(x => x.Number)
-        @Html.TextBoxFor(x => x.Number, new { @class = "form-control", placeholder = "Enter invoice number"})
+        @Html.TextBoxFor(x => x.Number, new { @class = "form-control", placeholder = "Enter invoice number" })
     </div>
     <div class="form-group">
         @Html.LabelFor(x => x.DateCreated)
@@ -30,25 +30,29 @@
         @Html.TextBoxFor(x => x.InvoiceRecipient, new { @class = "form-control", placeholder = "Enter invoice recipient" })
     </div>
     <div class="form-group">
+        @Html.LabelFor(x => x.SelectedTax)
+        @Html.DropDownListFor(x => x.SelectedTax, Model.Taxes, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
         <button type="button" class="btn btn-success" id="add-invoice-item-btn">Add Item</button>
     </div>
     <div id="items">
         @for (int i = 0; i < Model.InvoiceItems.Count; i++)
         {
-        <div class="row row-item">
-            <div class="form-group col-md-4">
-                @Html.LabelFor(x => Model.InvoiceItems[i].Description)
-                @Html.TextBoxFor(x => Model.InvoiceItems[i].Description, new { @class = "form-control" })
+            <div class="row row-item">
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(x => Model.InvoiceItems[i].Description)
+                    @Html.TextBoxFor(x => Model.InvoiceItems[i].Description, new { @class = "form-control" })
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(x => Model.InvoiceItems[i].Quantity)
+                    @Html.TextBoxFor(x => Model.InvoiceItems[i].Quantity, new { @class = "form-control" })
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(x => Model.InvoiceItems[i].UnitPrice)
+                    @Html.TextBoxFor(x => Model.InvoiceItems[i].UnitPrice, new { @class = "form-control" })
+                </div>
             </div>
-            <div class="form-group col-md-4">
-                @Html.LabelFor(x => Model.InvoiceItems[i].Quantity)
-                @Html.TextBoxFor(x => Model.InvoiceItems[i].Quantity, new { @class = "form-control" })
-            </div>
-            <div class="form-group col-md-4">
-                @Html.LabelFor(x => Model.InvoiceItems[i].UnitPrice)
-                @Html.TextBoxFor(x => Model.InvoiceItems[i].UnitPrice, new { @class = "form-control" })
-            </div>
-        </div>
         }
     </div>
     <input type="submit" value="Create" class="btn btn-primary">
@@ -59,20 +63,20 @@
     <script>
         var GetItem = function (number) {
             return `
-    <div class="row row-item">
-        <div class="form-group col-md-4">
-            <label for="InvoiceItems[${number}].Description">Item Description</label>
-            <input type="text" class="form-control" name="InvoiceItems[${number}].Description">
-        </div>
-        <div class="form-group col-md-4">
-            <label for="InvoiceItems[${number}].Quantity">Quantity</label>
-            <input type="number" class="form-control" name="InvoiceItems[${number}].Quantity">
-        </div>
-        <div class="form-group col-md-4">
-            <label for="InvoiceItems[${number}].UnitPrice">Unit Price</label>
-            <input type="text" class="form-control" name="InvoiceItems[${number}].UnitPrice">
-        </div>
-    </div>`;
+        <div class="row row-item">
+            <div class="form-group col-md-4">
+                <label for="InvoiceItems[${number}].Description">Item Description</label>
+                <input type="text" class="form-control" name="InvoiceItems[${number}].Description">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="InvoiceItems[${number}].Quantity">Quantity</label>
+                <input type="number" class="form-control" name="InvoiceItems[${number}].Quantity">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="InvoiceItems[${number}].UnitPrice">Unit Price</label>
+                <input type="text" class="form-control" name="InvoiceItems[${number}].UnitPrice">
+            </div>
+        </div>`;
         }
         $("#add-invoice-item-btn").on('click',
             function (e) {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -81,7 +82,7 @@ namespace Invoice.Web.Controllers
         }
 
         [HttpPost]
-        public virtual ActionResult Update(TRequest model, TKey id)
+        public virtual async Task<ActionResult> Update(TRequest model, TKey id)
         {
             var response = _baseService.Update(model, id);
             return RedirectToAction(nameof(Index));

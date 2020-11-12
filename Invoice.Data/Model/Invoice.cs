@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Invoice.Data.IdentityModels;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Invoice.Data.Model
 {
-    public class Invoice : BaseModel<int>, IDisposable
+    public class Invoice : BaseModel<int>
     {
         [Required]
         public string Number { get; set; }
@@ -17,11 +20,9 @@ namespace Invoice.Data.Model
         public double PriceAfterTax { get; set; }
         public string InvoiceRecipient { get; set; }
         public ICollection<InvoiceItem> InvoiceItems { get; set; }
-        public void Dispose()
-        {
-            DateCreated = null;
-            DueDate = null;
-            InvoiceItems = null;
-        }
+
+        [ForeignKey(nameof(ApplicationUser))]
+        public string ApplicationUserId { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
     }
 }

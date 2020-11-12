@@ -17,7 +17,7 @@ namespace Invoice.Data.DTO.Request
         [Required]
         public double UnitPrice { get; set; }
 
-        public double TotalUnitRawPrice { get; set; }
+        public double TotalUnitRawPrice => Quantity * UnitPrice;
 
     }
 }

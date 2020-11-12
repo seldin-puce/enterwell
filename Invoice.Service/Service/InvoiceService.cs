@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper.QueryableExtensions;
 using Invoice.Data.Context;
 using Invoice.Data.DTO.Request;
+using Invoice.Plugins.Tax;
 using Invoice.Service.AutoMapperConfiguration;
 using Invoice.Service.IService;
 
@@ -53,6 +56,101 @@ namespace Invoice.Service.Service
                     dbEntity.DueDate = entity.DueDate;
                     dbEntity.Number = entity.Number;
                     dbEntity.InvoiceRecipient = entity.InvoiceRecipient;
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+
+
+                    var invoiceItems = await _context.InvoiceItems.Where(x => x.InvoiceId == dbEntity.Id).AsNoTracking().ToListAsync();
+                    var invoiceItemsToAdd = entity.InvoiceItems.Where(x => !x.Id.HasValue).Select(x => new Data.Model.InvoiceItem()
+                    {
+                        Description = x.Description,
+                        InvoiceId = dbEntity.Id,
+                        Quantity = x.Quantity,
+                        TotalUnitRawPrice = x.TotalUnitRawPrice,
+                        UnitPrice = x.UnitPrice
+                    }).ToList();
+                    if (invoiceItemsToAdd.Any())
+                    {
+                        _context.InvoiceItems.AddRange(invoiceItemsToAdd);
+                    }
+
+                    var invoiceItemsToEdit = entity.InvoiceItems.Where(x => invoiceItems.Any(y => y.Id == x.Id) && x.Id.HasValue).ToList();
+                    if (invoiceItemsToEdit.Any())
+                    {
+                        invoiceItemsToEdit.ForEach(invoiceItem =>
+                        {
+                            var item = new Data.Model.InvoiceItem { Id = invoiceItem.Id.Value };
+                            _context.InvoiceItems.Attach(item);
+                            item.Description = invoiceItem.Description;
+                            item.UnitPrice = invoiceItem.UnitPrice;
+                            item.TotalUnitRawPrice = invoiceItem.TotalUnitRawPrice;
+                            item.Quantity = invoiceItem.Quantity;
+                        });
+                    }
+
+                    var invoiceItemsToDelete = invoiceItems.Where(x => entity.InvoiceItems.All(y => y.Id != x.Id)).ToList();
+                    if (invoiceItemsToDelete.Any())
+                    {
+                        invoiceItemsToDelete.ForEach(invoiceItem =>
+                        {
+                            _context.InvoiceItems.Attach(invoiceItem);
+                            _context.InvoiceItems.Remove(invoiceItem);
+                        });
+                    }
+
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+
+                    return _mapper.Mapper.Map<Data.DTO.Response.Invoice>(dbEntity);
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+        }
+
+        public Task<List<Data.DTO.Response.Invoice>> GetAllByUserId(string userId)
+        {
+            return _context.Invoices.Where(x => x.ApplicationUserId == userId).ProjectTo<Data.DTO.Response.Invoice>(_mapper.Mapper.ConfigurationProvider).ToListAsync();
+        }
+
+        public async Task<Data.DTO.Response.Invoice> CreateWithTax(Data.DTO.Request.Invoice entity, ITax taxService)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var invoiceModel = _mapper.Mapper.Map<Data.Model.Invoice>(entity);
+                    invoiceModel.RawPrice = invoiceModel.InvoiceItems.Sum(x => x.TotalUnitRawPrice);
+                    invoiceModel.PriceAfterTax = taxService.Calculate(invoiceModel.RawPrice) + invoiceModel.RawPrice;
+                    _context.Invoices.Add(invoiceModel);
+                    await _context.SaveChangesAsync();
+                    transaction.Commit();
+
+                    return _mapper.Mapper.Map<Data.DTO.Response.Invoice>(invoiceModel);
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+        }
+
+        public async Task<Data.DTO.Response.Invoice> UpdateWithTax(int id, Data.DTO.Request.Invoice entity, ITax taxService)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var dbEntity = await _context.Invoices.FirstOrDefaultAsync(x => x.Id == id);
+                    dbEntity.DateCreated = entity.DateCreated;
+                    dbEntity.DueDate = entity.DueDate;
+                    dbEntity.Number = entity.Number;
+                    dbEntity.InvoiceRecipient = entity.InvoiceRecipient;
+                    dbEntity.RawPrice = entity.InvoiceItems.Sum(x => x.TotalUnitRawPrice);
+                    dbEntity.PriceAfterTax = taxService.Calculate(dbEntity.RawPrice) + dbEntity.RawPrice;
                     await _context.SaveChangesAsync().ConfigureAwait(false);
 
 

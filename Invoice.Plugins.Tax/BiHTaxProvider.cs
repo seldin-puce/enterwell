@@ -6,9 +6,9 @@ namespace Invoice.Plugins.Tax
     [ExportMetadata("TaxValue", "17 %")]
     public class BiHTaxProvider : ITax
     {
-        public decimal Calculate(decimal value)
+        public double Calculate(double value)
         {
-            return value * 0.17M;
+            return value * 0.17;
         }
     }
 }
