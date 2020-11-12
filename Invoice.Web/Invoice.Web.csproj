@@ -172,7 +172,6 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\MefConfig.cs" />
     <Compile Include="App_Start\MefControllerFactory.cs" />
-    <Compile Include="App_Start\MefDependencyResolver.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\StartupAuth.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
